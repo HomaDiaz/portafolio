@@ -1,0 +1,378 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Generic - Spectral by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <style>
+        .logo-home:hover {
+            transform: scale(1.2);
+        }
+
+        /* Estilo para las imágenes y la animación */
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+            perspective: 1200px; /* Añadimos la perspectiva 3D */
+        }
+
+        .image-container img {
+            width: 45%;
+            opacity: 0;
+            transform: translateZ(0); /* Para aplicar el movimiento en 3D */
+            animation: slideIn 2s ease-out forwards, floatEffect 6s ease-in-out infinite; /* Animaciones combinadas */
+        }
+
+        .image-container .image-left {
+            animation-name: slideLeft, floatEffect;
+            animation-delay: 0.2s;
+        }
+
+        .image-container .image-right {
+            animation-name: slideRight, floatEffect;
+            animation-delay: 1s;
+        }
+
+        @keyframes slideLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100%) rotateY(-20deg); /* Inicia desplazándose hacia la izquierda y con un ligero giro 3D */
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotateY(0); /* Se mueve hacia el centro con un giro hacia su posición original */
+            }
+        }
+
+        @keyframes slideRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100%) rotateY(20deg); /* Inicia desplazándose desde la derecha con un giro 3D */
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotateY(0); /* Se mueve hacia el centro con un giro hacia su posición original */
+            }
+        }
+
+        @keyframes floatEffect {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05); /* Efecto flotante, moviendo las imágenes hacia arriba y escalándolas ligeramente */
+            }
+        }
+		
+		
+		
+		
+		
+/* Estilos para el Modal */
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0; /* Empieza transparente */
+  visibility: hidden; /* El modal no es visible inicialmente */
+  transform: scale(0.8) rotate3d(1, 1, 0, 60deg); /* Empieza pequeño y con rotación 3D */
+  transition: opacity 0.6s ease, transform 0.6s ease, visibility 0s 0.6s; /* Transición suave y la visibilidad cambiará después de 0.6s */
+}
+
+/* Esta clase se aplica cuando se abre el modal */
+.modal.show {
+  visibility: visible; /* Hacerlo visible */
+  opacity: 1; /* Se vuelve opaco */
+  transform: scale(1) rotate3d(0, 0, 0, 0); /* Llega a su tamaño normal y sin rotación */
+  transition: opacity 0.6s ease, transform 0.6s ease; /* Transición de apertura suave */
+}
+
+/* Aseguramos que el contenido del modal también se mueva suavemente */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 40px;
+  border: 1px solid #888;
+  width: 60%;
+  position: relative;
+  /* Puedes agregar un pequeño "perspective" para mejorar el efecto de 3D */
+  perspective: 1000px;
+  transition: transform 0.6s ease; /* Transición suave para el contenido */
+}
+
+.close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 25px;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Estilos para el Slider */
+.slider-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  transition: transform 1s ease-in-out;
+}
+
+.slider img {
+  width: 100%;
+  height: auto;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  transform: scale(0.30);  /* Inicialmente la imagen está un poco más pequeña */
+  opacity: 0; /* Las imágenes empiezan como transparentes */
+  flex-shrink: 0;
+}
+
+.slider img.active {
+  transform: scale(1); /* La imagen activa se escala a su tamaño normal */
+  opacity: 1; /* La imagen activa es completamente opaca */
+}
+
+button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+		
+		
+		
+		
+		
+		
+
+		
+		
+    </style>
+</head>
+<body class="is-preload">
+
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+
+        <!-- Header -->
+        <header id="header">
+            <h1>
+                <a href="index.html">
+                    <img src="./images/home.png" alt="Mi Marca" class="logo-home" width="30" height="auto" style="margin-top: 12px; transition: transform 0.3s ease;">
+                </a>
+            </h1>
+            <nav id="nav">
+                <ul>
+                    <li class="special">
+                        <a href="#menu" class="menuToggle"><span>Menu</span></a>
+                        <div id="menu">
+                            <ul>
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="fotografia.html">Fotografía</a></li>
+                                <li><a href="video.html">Video</a></li>
+                                <li><a href="iseño.html">Diseño</a></li>
+                               
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main -->
+        <article id="main">
+            <section class="wrapper style5">
+                <div class="inner">
+
+                    <!-- Imagenes aquí -->
+                    <div class="image-container">
+                        <img src="./images/diseñog1.jpg" alt="Fotografía 1" class="image-left">
+                        <img src="./images/diseñog2.jpg" alt="Fotografía 2" class="image-right">
+                    
+
+
+</br>
+					</div>
+					<ul class="actions special">
+    <li><a href="#" class="button primary" id="openModal">VER AQUÍ</a></li>
+  </ul>
+                    <hr />
+
+    
+
+<!-- Modal (ventana flotante) -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <!-- Slider de imágenes -->
+      <div class="slider-container">
+        <div class="slider" id="slider">
+          <!-- Las imágenes se cargarán aquí automáticamente con JavaScript -->
+        </div>
+        <button class="prev" id="prev">&#10094;</button>
+        <button class="next" id="next">&#10095;</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+// Función para abrir el modal
+document.getElementById('openModal').addEventListener('click', function (event) {
+  event.preventDefault();
+  const modal = document.getElementById('modal');
+
+  // Primero hacemos visible el modal
+  modal.style.visibility = 'visible';
+
+  // Luego aplicamos la clase 'show' para activar la transición
+  setTimeout(function() {
+    modal.classList.add('show');
+  }, 50); // Aseguramos un retraso de 50ms para permitir que el navegador registre la visibilidad
+
+  loadImages();
+});
+
+// Función para cerrar el modal
+document.getElementById('closeModal').addEventListener('click', function () {
+  const modal = document.getElementById('modal');
+  
+  // Eliminar la clase 'show' para que se ejecute la transición de cierre
+  modal.classList.remove('show');
+  
+  // Retardar la visibilidad después de que la animación haya terminado
+  setTimeout(function() {
+    modal.style.visibility = 'hidden';
+  }, 600); // Esto debe coincidir con la duración de la animación de cierre
+});
+// Cargar las imágenes en el slider
+function loadImages() {
+  const slider = document.getElementById('slider');
+  for (let i = 23; i <= 32; i++) {
+    const img = document.createElement('img');
+    img.src = `./images/fotografias/${i}.jpg`;
+    if (i === 23) img.classList.add('active'); // La primera imagen está activa
+    slider.appendChild(img);
+  }
+}
+
+// Slider de imágenes
+let currentIndex = 0;
+
+function showImage(index) {
+  const images = document.querySelectorAll('.slider img');
+  const slider = document.querySelector('.slider');
+
+  if (index >= images.length) currentIndex = 0;
+  if (index < 0) currentIndex = images.length - 1;
+
+  // Desplazar el slider
+  slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+  // Quitar la clase 'active' de todas las imágenes
+  images.forEach(img => img.classList.remove('active'));
+
+  // Añadir la clase 'active' a la imagen actual
+  images[currentIndex].classList.add('active');
+}
+
+document.getElementById('prev').addEventListener('click', function () {
+  currentIndex--;
+  showImage(currentIndex);
+});
+
+document.getElementById('next').addEventListener('click', function () {
+  currentIndex++;
+  showImage(currentIndex);
+});
+
+// Mostrar la primera imagen al cargar
+window.onload = function () {
+  showImage(currentIndex);
+};
+  
+ 
+  
+  </script>
+   <!-- Contenedor de puntos debajo del slider -->
+<div class="dots-container" id="dots-container">
+  <!-- Los puntos se agregarán aquí mediante JavaScript -->
+</div>
+
+
+
+
+
+
+
+
+
+
+                    
+                </div>
+            </section>
+        </article>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+                <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Copyright</li><li>Design: HOMA DIAZ</li>
+            </ul>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+</html>

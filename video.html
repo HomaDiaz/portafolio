@@ -1,0 +1,396 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Generic - Spectral by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <style>
+        .logo-home:hover {
+            transform: scale(1.2);
+        }
+
+        /* Estilo para las imágenes y la animación */
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+            perspective: 1200px; /* Añadimos la perspectiva 3D */
+        }
+
+        .image-container img {
+            width: 45%;
+            opacity: 0;
+            transform: translateZ(0); /* Para aplicar el movimiento en 3D */
+            animation: slideIn 2s ease-out forwards, floatEffect 6s ease-in-out infinite; /* Animaciones combinadas */
+        }
+
+        .image-container .image-left {
+            animation-name: slideLeft, floatEffect;
+            animation-delay: 0.2s;
+        }
+
+        .image-container .image-right {
+            animation-name: slideRight, floatEffect;
+            animation-delay: 1s;
+        }
+
+        @keyframes slideLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100%) rotateY(-20deg); /* Inicia desplazándose hacia la izquierda y con un ligero giro 3D */
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotateY(0); /* Se mueve hacia el centro con un giro hacia su posición original */
+            }
+        }
+
+        @keyframes slideRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100%) rotateY(20deg); /* Inicia desplazándose desde la derecha con un giro 3D */
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotateY(0); /* Se mueve hacia el centro con un giro hacia su posición original */
+            }
+        }
+
+        @keyframes floatEffect {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05); /* Efecto flotante, moviendo las imágenes hacia arriba y escalándolas ligeramente */
+            }
+        }
+
+        /* Estilos para el Modal */
+        .modal {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0; /* Empieza transparente */
+            visibility: hidden; /* El modal no es visible inicialmente */
+            transform: scale(0.8) rotate3d(1, 1, 0, 60deg); /* Empieza pequeño y con rotación 3D */
+            transition: opacity 0.6s ease, transform 0.6s ease, visibility 0s 0.6s; /* Transición suave y la visibilidad cambiará después de 0.6s */
+        }
+
+        /* Esta clase se aplica cuando se abre el modal */
+        .modal.show {
+            visibility: visible; /* Hacerlo visible */
+            opacity: 1; /* Se vuelve opaco */
+            transform: scale(1) rotate3d(0, 0, 0, 0); /* Llega a su tamaño normal y sin rotación */
+            transition: opacity 0.6s ease, transform 0.6s ease; /* Transición de apertura suave */
+        }
+
+        /* Aseguramos que el contenido del modal también se mueva suavemente */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; /* Margen más grande */
+            padding: 30px; /* Margen interno más grande */
+            border: 1px solid #888;
+            width: 80%; /* Ancho del modal reducido */
+            max-width: 1000px; /* Máximo ancho más pequeño */
+            position: relative;
+            perspective: 1000px;
+            transition: transform 0.6s ease; /* Transición suave para el contenido */
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 5px; /* Más arriba */
+            right: 10px; /* Más a la derecha */
+            z-index: 3; /* Asegurar que esté por encima del video */
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo para mejor visibilidad */
+            border-radius: 50%; /* Forma circular */
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            background-color: rgba(255, 255, 255, 1); /* Fondo más claro al hacer hover */
+        }
+
+        /* Estilos para el Slider de Videos */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 56.25%; /* Relación de aspecto 16:9 (para 1920x1080) */
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 1s ease-in-out;
+        }
+
+        .slider iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            flex-shrink: 0;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+        }
+
+        .slider iframe.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 2;
+        }
+
+        button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+    </style>
+</head>
+<body class="is-preload">
+
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+
+        <!-- Header -->
+        <header id="header">
+            <h1>
+                <a href="index.html">
+                    <img src="./images/home.png" alt="Mi Marca" class="logo-home" width="30" height="auto" style="margin-top: 12px; transition: transform 0.3s ease;">
+                </a>
+            </h1>
+            <nav id="nav">
+                <ul>
+                    <li class="special">
+                        <a href="#menu" class="menuToggle"><span>Menu</span></a>
+                        <div id="menu">
+                            <ul>
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="fotografia.html">Fotografía</a></li>
+                                <li><a href="video.html">Video</a></li>
+                                <li><a href="diseño.html">Diseño</a></li>
+                               
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main -->
+        <article id="main">
+            <section class="wrapper style5">
+                <div class="inner">
+
+                    <!-- Imagenes aquí -->
+                    <div class="image-container">
+                        <img src="./images/video.jpg" alt="Fotografía 1" class="image-left">
+                       <iframe width="560" height="315" src="https://www.youtube.com/embed/OyplqPk0a14?si=lrw9vWzstV3KXm6D" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
+ <p align = "center">Pausa el video antes de acceder <p>
+                    <ul class="actions special">
+                   
+						<li><a href="#" class="button primary" id="openModal">VER AQUÍ</a></li>
+                    </ul>
+                    <hr />
+                </div>
+            </section>
+        </article>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+                <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Copyright</li><li>Design: HOMA DIAZ</li>
+            </ul>
+        </footer>
+
+    </div>
+
+    <!-- Modal (ventana flotante) -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <!-- Slider de Videos -->
+            <div class="slider-container">
+                <div class="slider" id="slider">
+                    <iframe src="https://www.facebook.com/plugins/video.php?height=1080&href=https%3A%2F%2Fwww.facebook.com%2FAlcaldiaTecolucaOficial%2Fvideos%2F1269628130573574%2F&show_text=false&width=1920&t=0&mute=0" width="1920" height="1080" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" class="active"></iframe>
+                    <iframe src="https://www.facebook.com/plugins/video.php?height=1080&href=https%3A%2F%2Fwww.facebook.com%2FAlcaldiaTecolucaOficial%2Fvideos%2F742353300278208%2F&show_text=false&width=1920&t=0&mute=0" width="1920" height="1080" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                    <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fjjspublicitarios%2Fvideos%2F720638903365892%2F&show_text=false&width=560&t=0" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                    <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2F61556361460818%2Fvideos%2F2209328072747091%2F&show_text=false&width=560&t=124" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                </div>
+                <button class="prev" id="prev">&#10094;</button>
+                <button class="next" id="next">&#10095;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        // Función para pausar el video de YouTube
+        function pauseYouTubeVideo() {
+            const youtubeIframe = document.querySelector('iframe[src*="youtube.com"]');
+            if (youtubeIframe) {
+                youtubeIframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'pauseVideo',
+                    args: []
+                }), '*');
+            }
+        }
+
+        // Función para abrir el modal
+        document.getElementById('openModal').addEventListener('click', function (event) {
+            event.preventDefault();
+            const modal = document.getElementById('modal');
+
+            // Pausar el video de YouTube antes de abrir el modal
+            pauseYouTubeVideo();
+
+            // Primero hacemos visible el modal
+            modal.style.visibility = 'visible';
+
+            // Luego aplicamos la clase 'show' para activar la transición
+            setTimeout(function () {
+                modal.classList.add('show');
+            }, 50); // Aseguramos un retraso de 50ms para permitir que el navegador registre la visibilidad
+        });
+
+        // Función para cerrar el modal y detener los videos
+        document.getElementById('closeModal').addEventListener('click', function () {
+            const modal = document.getElementById('modal');
+            const videos = document.querySelectorAll('.slider iframe');
+
+            // Detener todos los videos
+            videos.forEach(video => {
+                if (video.src.includes('youtube.com')) {
+                    // Si es un video de YouTube, detenerlo
+                    video.src = ''; // Detener el video de YouTube
+                } else {
+                    video.src = video.src; // Reiniciar el src para detener la reproducción de otros videos
+                }
+            });
+
+            // Eliminar la clase 'show' para que se ejecute la transición de cierre
+            modal.classList.remove('show');
+
+            // Retardar la visibilidad después de que la animación haya terminado
+            setTimeout(function () {
+                modal.style.visibility = 'hidden';
+            }, 600); // Esto debe coincidir con la duración de la animación de cierre
+        });
+
+        // Slider de Videos
+        let currentIndex = 0;
+        const videos = document.querySelectorAll('.slider iframe');
+        const slider = document.querySelector('.slider');
+
+        function showVideo(index) {
+            // Detener el video actual antes de cambiar
+            if (videos[currentIndex].src.includes('youtube.com')) {
+                // Si es un video de YouTube, detenerlo
+                videos[currentIndex].src = ''; // Detener el video de YouTube
+            } else {
+                videos[currentIndex].src = videos[currentIndex].src; // Reiniciar el src para detener la reproducción de otros videos
+            }
+
+            // Ocultar todos los videos
+            videos.forEach(video => video.classList.remove('active'));
+
+            // Mostrar el video seleccionado
+            videos[index].classList.add('active');
+            currentIndex = index;
+
+            // Mover el slider para mostrar el video actual
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+            // Forzar la reproducción del video actual
+            if (videos[currentIndex].src.includes('youtube.com')) {
+                // Si es un video de YouTube, iniciar la reproducción
+                videos[currentIndex].src = `https://www.youtube.com/embed/${videos[currentIndex].dataset.videoId}?autoplay=1`;
+            } else {
+                videos[currentIndex].src += '&autoplay=1';
+            }
+        }
+
+        document.getElementById('prev').addEventListener('click', function () {
+            const newIndex = (currentIndex > 0) ? currentIndex - 1 : videos.length - 1;
+            showVideo(newIndex);
+        });
+
+        document.getElementById('next').addEventListener('click', function () {
+            const newIndex = (currentIndex < videos.length - 1) ? currentIndex + 1 : 0;
+            showVideo(newIndex);
+        });
+
+        // Mostrar el primer video al cargar
+        window.onload = function () {
+            showVideo(currentIndex);
+        };
+
+        // Habilitar el audio al hacer clic en el iframe
+        const iframes = document.querySelectorAll('.slider iframe');
+        iframes.forEach(iframe => {
+            iframe.addEventListener('click', function () {
+                iframe.src += '&mute=0'; // Habilitar el audio
+            });
+        });
+    </script>
+</body>
+</html>
